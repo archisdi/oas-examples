@@ -1,0 +1,88 @@
+swagger: '2.0'
+info:
+  version: '0.0.2'
+  title: 'Photo Album APIs'
+schemes:
+  - https
+host: api.album.ai
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+ - name: Album
+   description: everything about album
+paths:
+  /album:
+    get:
+      description: 'retrieve list of albums'
+      operationId: getAlbum
+      tags:
+        - "Album"
+      parameters:
+        - name: start
+          in: query
+          required: false
+          type: string
+        - name: end
+          in: query
+          required: false
+          type: string
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: 'successfully retrieve album list'
+    post:
+      description: 'create new album'
+      operationId: createAlbum
+      tags:
+        - "Album"
+      parameters:
+        - name: newAlbum
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/newAlbum'
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: 'successfully create an album'
+          schema:
+            $ref: '#/definitions/newAlbum'
+        401:
+          description: 'not authorized'
+          schema:
+            $ref: '#/definitions/error'
+
+
+definitions:
+  error:
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+  newAlbum:
+    properties:
+      name:
+        type: string
+      author:
+        type: string
+      songs:
+        type: array
+        items:
+          properties:
+            name:
+              type: string
+            duration:
+              type: integer
+
+securityDefinitions:
+  api_key:
+    type: apiKey
+    name: secret
+    in: header
+  basic_auth:
+    type: basic
